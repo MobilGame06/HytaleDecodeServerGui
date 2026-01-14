@@ -33,7 +33,7 @@ Output
   "ExpiresAt": "2026-01-14T17:09:16.0525452Z",
   "Candidates": [
     { "Type": "Host", "Address": "LOCALIP", "Port": 51193, "Priority": 1000 },
-    { "Type": "UPnP", "Address": "PUBLIC_IÜ", "Port": 51193, "Priority": 900 }
+    { "Type": "UPnP", "Address": "PUBLIC_IP", "Port": 51193, "Priority": 900 }
   ]
 }
 ```
