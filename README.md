@@ -21,6 +21,23 @@ A user-friendly desktop application designed to decode, decompress, and inspect 
 3.  **Decode**: Click the "Decode" button.
 4.  **View Output**: The decoded, decompressed, and formatted data will appear in the "Output" area below. If the output is valid JSON, it will be pretty-printed and highlighted.
 
+## Example
+
+Output
+
+```json
+{
+  "HostName": "MobilGame06",
+  "HostUuid": "UUID",
+  "ServerName": "creative",
+  "ExpiresAt": "2026-01-14T17:09:16.0525452Z",
+  "Candidates": [
+    { "Type": "Host", "Address": "LOCALIP", "Port": 51193, "Priority": 1000 },
+    { "Type": "UPnP", "Address": "PUBLIC_IÜ", "Port": 51193, "Priority": 900 }
+  ]
+}
+```
+
 ## Contributing
 
 Contributions are welcome! If you have suggestions for improvements or find a bug, please feel free to open an issue or submit a pull request.
