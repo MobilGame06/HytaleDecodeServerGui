@@ -24,11 +24,6 @@ jobs:
             exe_name: HytaleDecodeServerGui
             extra_args: ""
 
-          - os: macos-latest
-            artifact_name: HytaleDecodeServerGui-macos
-            exe_name: HytaleDecodeServerGui
-            extra_args: ""
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
