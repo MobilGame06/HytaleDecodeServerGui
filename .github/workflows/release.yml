@@ -1,13 +1,33 @@
-name: Build and Release Executable
+name: Build & Release HytaleDecodeServerGui
 
 on:
   push:
     tags:
-      - "v*" # Trigger on tags like v1.0, v1.1.0, etc.
+      - "v*"
 
 jobs:
   build:
-    runs-on: windows-latest
+    name: Build for ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest
+            artifact_name: HytaleDecodeServerGui-windows
+            exe_name: HytaleDecodeServerGui.exe
+            extra_args: --windowed
+
+          - os: ubuntu-latest
+            artifact_name: HytaleDecodeServerGui-linux
+            exe_name: HytaleDecodeServerGui
+            extra_args: ""
+
+          - os: macos-latest
+            artifact_name: HytaleDecodeServerGui-macos
+            exe_name: HytaleDecodeServerGui
+            extra_args: ""
 
     steps:
       - name: Checkout repository
@@ -17,6 +37,7 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.x"
+          cache: "pip"
 
       - name: Install dependencies
         run: |
@@ -25,18 +46,54 @@ jobs:
 
       - name: Build executable
         run: |
-          pyinstaller --name "HytaleDecodeServerGui" --onefile --windowed --icon=NONE decode_gui.py
+          pyinstaller \
+            --name "HytaleDecodeServerGui" \
+            --onefile \
+            ${{ matrix.extra_args }} \
+            decode_gui.py
 
-      - name: Get tag name
-        id: get_tag
-        run: echo "TAG_NAME=${GITHUB_REF#refs/tags/}" >> $env:GITHUB_ENV
+      - name: Package build
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force package
+          Copy-Item dist/${{ matrix.exe_name }} package/
 
-      - name: Create Release and Upload Asset
+      - name: Create ZIP
+        shell: pwsh
+        run: |
+          Compress-Archive `
+            -Path package\* `
+            -DestinationPath ${{ matrix.artifact_name }}-${{ github.ref_name }}.zip
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact_name }}
+          path: ${{ matrix.artifact_name }}-${{ github.ref_name }}.zip
+
+  release:
+    name: Create GitHub Release
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
-          files: dist/HytaleDecodeServerGui.exe
-          tag_name: ${{ env.TAG_NAME }}
-          name: Release ${{ env.TAG_NAME }}
-          body: "Automated release for version ${{ env.TAG_NAME }}"
+          tag_name: ${{ github.ref_name }}
+          name: Release ${{ github.ref_name }}
+          body: |
+            Automated multi-platform release for **${{ github.ref_name }}**
+
+            **Included builds:**
+            - 🪟 Windows (GUI)
+            - 🐧 Linux
+            - 🍎 macOS
+          files: artifacts/**/**/*.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
