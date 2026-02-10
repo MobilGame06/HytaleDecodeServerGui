@@ -84,7 +84,6 @@ jobs:
             **Included builds:**
             - 🪟 Windows (GUI)
             - 🐧 Linux
-            - 🍎 macOS
           files: artifacts/**/**/*.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
