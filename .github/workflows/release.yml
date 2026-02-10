@@ -46,11 +46,7 @@ jobs:
 
       - name: Build executable
         run: |
-          pyinstaller \
-            --name "HytaleDecodeServerGui" \
-            --onefile \
-            ${{ matrix.extra_args }} \
-            decode_gui.py
+          pyinstaller --name "HytaleDecodeServerGui" --onefile ${{ matrix.extra_args }} decode_gui.py
 
       - name: Package build
         shell: pwsh
