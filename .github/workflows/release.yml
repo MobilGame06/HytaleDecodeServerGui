@@ -19,11 +19,6 @@ jobs:
             exe_name: HytaleDecodeServerGui.exe
             extra_args: --windowed
 
-          - os: ubuntu-latest
-            artifact_name: HytaleDecodeServerGui-linux
-            exe_name: HytaleDecodeServerGui
-            extra_args: ""
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -83,7 +78,6 @@ jobs:
 
             **Included builds:**
             - 🪟 Windows (GUI)
-            - 🐧 Linux
           files: artifacts/**/**/*.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
